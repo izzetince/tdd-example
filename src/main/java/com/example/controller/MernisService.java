@@ -5,8 +5,8 @@ import com.example.pojo.User;
 
 public class MernisService {
 
-    public boolean checkUser(User user) {
+    public String checkUser(User user) {
         //TODO not implemented
-        return false;
+        return "Tc kimlik yanlis";
     }
 }

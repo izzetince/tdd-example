@@ -3,6 +3,8 @@ package com.example.controller;
 import com.example.pojo.User;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static org.junit.Assert.*;
@@ -11,16 +13,18 @@ public class MemberServiceTest {
 
     private MemberService memberService;
     private MernisService mernisService;
+    private LogService logService;
 
     @Before
     public void setUp() {
         mernisService = Mockito.mock(MernisService.class);
-        memberService = new MemberService(mernisService);
+        logService = Mockito.mock(LogService.class);
+        memberService = new MemberService(mernisService,logService);
     }
 
 
     @Test
-    public void should() {
+    public void shouldReturnMernisHataliWhenMernisAuthIsUnsuccess() {
         // Given
         User user = User.builder()
                 .lastname("silahcilar")
@@ -29,9 +33,37 @@ public class MemberServiceTest {
                 .username("dsilahcilar")
                 .build();
         //When
-        Boolean result = memberService.signUp(user);
+
+        Mockito.when(mernisService.checkUser(user)).thenReturn("yanlis");
+
+        String result = memberService.signUp(user);
 
         Mockito.verify(mernisService).checkUser(user);
+
+        assertEquals("Mernis testi basarisiz", result, "mernis basarisiz");
+
+    }
+
+    @Test
+    public void shouldWriteLogWhenMernisAuthIsSuccess() {
+        // Given
+        User user = User.builder()
+                .lastname("silahcilar")
+                .name("deniz")
+                .tcKimlik("13242342342")
+                .username("dsilahcilar")
+                .build();
+        //When
+
+        Mockito.when(mernisService.checkUser(Matchers.any())).thenReturn("basarili");
+
+        String result = memberService.signUp(user);
+
+        Mockito.verify(mernisService).checkUser(Matchers.any(User.class));
+
+        Mockito.verify(logService).writeLog(Matchers.anyString());
+
+     //   assertEquals("Mernis testi basarisiz", result, "mernis basarisiz");
 
     }
 
@@ -46,12 +78,12 @@ public class MemberServiceTest {
                 .build();
 
         //when
-        Boolean result = memberService.signUp(user);
+       // Boolean result = memberService.signUp(user);
 
         //Then
-        assertFalse(result);
+       // assertFalse(result);
     }
-
+/*
     @Test
     public void shouldReturnFalseWhenLastNameIsEmpty() {
 
@@ -88,4 +120,5 @@ public class MemberServiceTest {
         //Then
         assertTrue(result);
     }
+    */
 }

@@ -6,20 +6,26 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberService {
     private final MernisService mernisService;
+    private final LogService logService;
 
-    public Boolean signUp(User user) {
+    public String signUp(User user) {
 
+        User dbUser = User.builder().build();
 
-      //  mernisService.checkUser(user);
-
-
+        String mernisResult = mernisService.checkUser(dbUser);
+        if (mernisResult.contains("yanlis")) {
+            return "mernis basarisiz";
+        }
+        if (mernisResult.contains("basarili")) {
+            logService.writeLog("gdsagasgas");
+        }
         if (user.getTcKimlik() == null) {
-            return false;
+            return "tc kimlik yanlis";
         }
         if (user.getLastname() == null) {
-            return false;
+            return "lastname yanlis";
         }
-        return true;
+        return "basariyla kaydedildi...";
     }
 
 }
