@@ -8,6 +8,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.only;
 
 public class MemberServiceTest {
 
@@ -24,14 +28,23 @@ public class MemberServiceTest {
 
 
     @Test
+    public void shouldVerifyNoInteraction() {
+        User user = getUser();
+
+        Mockito.when(mernisService.checkUser(user)).thenReturn("yanlis");
+
+        String result = memberService.signUp(user);
+
+        Mockito.verify(mernisService).checkUser(user);
+        Mockito.verify(logService).writeLog("mernis yanlis");
+        Mockito.verify(logService, only()).writeLog(any());
+        Mockito.verifyNoMoreInteractions(logService);
+
+    }
+
+    @Test
     public void shouldReturnMernisHataliWhenMernisAuthIsUnsuccess() {
-        // Given
-        User user = User.builder()
-                .lastname("silahcilar")
-                .name("deniz")
-                .tcKimlik("13242342342")
-                .username("dsilahcilar")
-                .build();
+        User user = getUser();
         //When
 
         Mockito.when(mernisService.checkUser(user)).thenReturn("yanlis");
@@ -44,15 +57,20 @@ public class MemberServiceTest {
 
     }
 
-
-    @Test
-    public void shouldSpy() {
-        User user = User.builder()
+    private User getUser() {
+        // Given
+        return User.builder()
                 .lastname("silahcilar")
                 .name("deniz")
                 .tcKimlik("13242342342")
                 .username("dsilahcilar")
                 .build();
+    }
+
+
+    @Test
+    public void shouldSpy() {
+        User user = getUser();
 
         LogService newLogservice = Mockito.spy(new LogService());
         memberService = new MemberService(mernisService, newLogservice);
@@ -68,12 +86,7 @@ public class MemberServiceTest {
     @Test
     public void shouldWriteLogWhenMernisAuthIsSuccess() {
         // Given
-        User user = User.builder()
-                .lastname("silahcilar")
-                .name("deniz")
-                .tcKimlik("13242342342")
-                .username("dsilahcilar")
-                .build();
+        User user = getUser();
         //When
 
         Mockito.when(mernisService.checkUser(Matchers.any())).thenReturn("basarili");

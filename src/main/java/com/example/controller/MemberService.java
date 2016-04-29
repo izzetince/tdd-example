@@ -10,12 +10,13 @@ public class MemberService {
 
     public String signUp(User user) {
 
-        User dbUser = User.builder().build();
-
-        String mernisResult = mernisService.checkUser(dbUser);
+        String mernisResult = mernisService.checkUser(user);
 
 
         if (mernisResult.contains("yanlis")) {
+            logService.writeLog("mernis yanlis");
+            logService.writeLog("uyelik iptal!");
+
             return "mernis basarisiz";
         }
         if (mernisResult.contains("basarili")) {
@@ -27,6 +28,8 @@ public class MemberService {
         if (user.getLastname() == null) {
             return "lastname yanlis";
         }
+        logService.writeLog("hersey basarili");
+
         return "basariyla kaydedildi...";
     }
 
