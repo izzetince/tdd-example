@@ -72,6 +72,50 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+
+				<executions>
+					<execution>
+						<id>default-prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>default-prepare-agent-integration</id>
+						<goals>
+							<goal>prepare-agent-integration</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>default-report</id>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<exclude>**/deneme/**/*.class</exclude>
+								<exclude>**/deneme/**/*.class</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>default-report-integration</id>
+						<goals>
+							<goal>report-integration</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<exclude>**/deneme/**/*.class</exclude>
+								<exclude>**/deneme/**/*.class</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	
