@@ -19,7 +19,7 @@ public class MemberServiceTest {
     public void setUp() {
         mernisService = Mockito.mock(MernisService.class);
         logService = Mockito.mock(LogService.class);
-        memberService = new MemberService(mernisService,logService);
+        memberService = new MemberService(mernisService, logService);
     }
 
 
@@ -44,6 +44,27 @@ public class MemberServiceTest {
 
     }
 
+
+    @Test
+    public void shouldSpy() {
+        User user = User.builder()
+                .lastname("silahcilar")
+                .name("deniz")
+                .tcKimlik("13242342342")
+                .username("dsilahcilar")
+                .build();
+
+        LogService newLogservice = Mockito.spy(new LogService());
+        memberService = new MemberService(mernisService, newLogservice);
+
+        Mockito.when(mernisService.checkUser(Matchers.any())).thenReturn("basarili");
+
+        //When
+        String result = memberService.signUp(user);
+
+        Mockito.verify(newLogservice).writeLog("...");
+    }
+
     @Test
     public void shouldWriteLogWhenMernisAuthIsSuccess() {
         // Given
@@ -60,10 +81,9 @@ public class MemberServiceTest {
         String result = memberService.signUp(user);
 
         Mockito.verify(mernisService).checkUser(Matchers.any(User.class));
-
         Mockito.verify(logService).writeLog(Matchers.anyString());
 
-     //   assertEquals("Mernis testi basarisiz", result, "mernis basarisiz");
+        //   assertEquals("Mernis testi basarisiz", result, "mernis basarisiz");
 
     }
 
@@ -78,10 +98,10 @@ public class MemberServiceTest {
                 .build();
 
         //when
-       // Boolean result = memberService.signUp(user);
+        // Boolean result = memberService.signUp(user);
 
         //Then
-       // assertFalse(result);
+        // assertFalse(result);
     }
 /*
     @Test

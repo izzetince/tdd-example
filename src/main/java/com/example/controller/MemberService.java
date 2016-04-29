@@ -13,11 +13,13 @@ public class MemberService {
         User dbUser = User.builder().build();
 
         String mernisResult = mernisService.checkUser(dbUser);
+
+
         if (mernisResult.contains("yanlis")) {
             return "mernis basarisiz";
         }
         if (mernisResult.contains("basarili")) {
-            logService.writeLog("gdsagasgas");
+            logService.writeLog("...");
         }
         if (user.getTcKimlik() == null) {
             return "tc kimlik yanlis";
